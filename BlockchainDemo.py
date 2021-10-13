@@ -1,21 +1,15 @@
-import django.shortcuts
-import datetime
 import hashlib
 import json
-from django.http import JsonResponse
 
 
 class Blockchain:
 
     def __init__(self):
         self.chain = []
-        self.create_block(nonce = 1, previous_hash = '0')
+        self.create_block(nonce=1, previous_hash='0')
 
     def create_block(self, nonce, previous_hash):
-        block = {'index': len(self.chain) + 1,
-                 'timestamp': str(datetime.datetime.now()),
-                 'nonce': nonce,
-                 'previous_hash': previous_hash}
+        block = dict(index=len(self.chain) + 1, nonce=nonce, previous_hash=previous_hash)
         self.chain.append(block)
         return block
 
@@ -26,7 +20,7 @@ class Blockchain:
         new_nonce = 1
         check_nonce = False
         while check_nonce is False:
-            hash_operation = hashlib.sha256(str(new_nonce**2 - previous_nonce**2).encode()).hexdigest()
+            hash_operation = hashlib.sha256(str(new_nonce ** 2 - previous_nonce ** 2).encode()).hexdigest()
             if hash_operation[:4] == '0000':
                 check_nonce = True
             else:
@@ -34,7 +28,7 @@ class Blockchain:
         return new_nonce
 
     def hash(self, block):
-        encoded_block = json.dumps(block, sort_keys = True).encode()
+        encoded_block = json.dumps(block, sort_keys=True).encode()
         return hashlib.sha256(encoded_block).hexdigest()
 
     def is_chain_valid(self, chain):
@@ -46,7 +40,7 @@ class Blockchain:
                 return False
             previous_nonce = previous_block['nonce']
             nonce = block['nonce']
-            hash_operation = hashlib.sha256(str(nonce**2 - previous_nonce**2).encode()).hexdigest()
+            hash_operation = hashlib.sha256(str(nonce ** 2 - previous_nonce ** 2).encode()).hexdigest()
             if hash_operation[:4] != '0000':
                 return False
             previous_block = block
@@ -57,7 +51,12 @@ class Blockchain:
 # Creating our Blockchain
 blockchain = Blockchain()
 
+
 # Mining a new block
+class JsonResponse(object):
+    pass
+
+
 def mine_block(request):
     if request.method == 'GET':
         previous_block = blockchain.get_previous_block()
@@ -72,12 +71,14 @@ def mine_block(request):
                     'previous_hash': block['previous_hash']}
     return JsonResponse(response)
 
+
 # Getting the full Blockchain
 def get_chain(request):
     if request.method == 'GET':
         response = {'chain': blockchain.chain,
                     'length': len(blockchain.chain)}
     return JsonResponse(response)
+
 
 # Checking if the Blockchain is valid
 def is_valid(request):
