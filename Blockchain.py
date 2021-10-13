@@ -1,16 +1,14 @@
 {
     "author" :"author_name",
-    "timestamp" : "transaction_time",
-    "data : "transaction_data"
+    "data : "certificate_data"
 }
 
 from hashlib import sha256
 import json
 class Block:
-    def __init__(self, index, transactions, timestamp, previous_hash, nonce=0):
+    def __init__(self, index, certificate, previous_hash, nonce=0):
         self.index =index
-        self.transactions = transactions
-        self.timestamp = timestamp
+        self.certificate = certificate
         self.previous_hash = previous_hash
         self.nonce = nonce
 
@@ -20,7 +18,7 @@ class Block:
 import time
 class Blockchain:
     def __init__(self):
-        self.unconfirmed_transactions = []
+        self.unconfirmed_certificate = []
         self.chain = []
         self.create_genesis_block()
 
@@ -42,23 +40,23 @@ class Blockchain:
     def add_block(self, block, proof):
         previous_hash = self.last_block.hash
         if previous_hash != block.previous_hash:
-            return false
+            return False
         if not self.is_valid_proof(block, proof):
-            return false
+            return False
         block.hash = proof
         self.chain.append(block)
         return true
     def is_valid_proof(self, block, block_hash):
         return (block_hash.startswith('0') * Blockchain.difficulty) and block_hash == block.compute_hash())
-    def add_new_transaction(self, transaction):
-        self.unconfirmed_transactions.append(transaction)
+    def add_new_certificate(self, certificate):
+        self.unconfirmed_certificate.append(certificate)
 
     def mine(self):
-        if not self.unconfirmed_transactions:
+        if not self.unconfirmed_certificate:
             return false
         last_block = self.last_block
-        new_block = Block(index=last_block.index +1, transactions=self.unconfirmed_transactions,timestamp=time.time(), previous_hash=last_block.hash)
+        new_block = Block(index=last_block.index +1, certificate=self.unconfirmed_certificate, previous_hash=last_block.hash)
         proof = self.proof_of_work(new_block)
         self.add_block(new_block, proof)
-        self.unconfirmed_transactions = []
+        self.unconfirmed_certificate = []
         return new_block.index
