@@ -28,16 +28,30 @@ class Blockchain:
         self.chain.append(genesis_block)
         print(genesis_block)
 
-    def create_second_block(self):
-        input("Input the school where the degree was achieved:  ")
-        second_block = input
-        second_block.hash = second_block.compute_hash()
-        self.chain.append(second_block)
-        print(second_block)
+    def last_block(self):
+        return self.chain[-1]
 
-    def create_third_block(self):
-        input("Input the year the degree was achieved:  ")
-        third_block = input
-        third_block.hash = third_block.compute.hash()
-        self.chain.append(third_block)
-        print(third_block)
+    def proof_of_work(self, block):
+        block.nonce =
+        computed_hash = block.compute_hash()
+        while not computed_hash.startswith('0' * Blockchain.difficulty):
+            block.nonce += 1
+            computed_hash = block.compute_hash()
+        return computed_hash
+
+    def add_block(self, block, proof):
+        previous_hash = self.last_block.hash
+        if previous_hash != block.previous_hash:
+            return False
+        if not self.is_valid_proof(block, proof):
+            return False
+        block.hash = proof
+        self.chain.append(block)
+        return True
+
+
+def main():
+
+
+
+main()

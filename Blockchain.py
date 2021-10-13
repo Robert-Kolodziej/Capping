@@ -1,6 +1,6 @@
 {
     "author" :"author_name",
-    "data : "certificate_data"
+    "data" : "certificate_data"
 }
 
 from hashlib import sha256
@@ -31,7 +31,7 @@ class Blockchain:
         return self.chain[-1]
     difficulty = 2
     def proof_of_work(self, block):
-        block.nonce =
+        block.nonce = []
         computed_hash = block.compute_hash()
         while not computed_hash.startswith('0' * Blockchain.difficulty):
             block.nonce += 1
@@ -45,9 +45,9 @@ class Blockchain:
             return False
         block.hash = proof
         self.chain.append(block)
-        return true
+        return True
     def is_valid_proof(self, block, block_hash):
-        return (block_hash.startswith('0') * Blockchain.difficulty) and block_hash == block.compute_hash())
+        return (block_hash.startswith('0') * Blockchain.difficulty) and block_hash == block.compute_hash()
     def add_new_certificate(self, certificate):
         self.unconfirmed_certificate.append(certificate)
 
