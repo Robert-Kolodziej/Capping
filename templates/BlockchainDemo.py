@@ -4,18 +4,20 @@ import random
 
 import self as self
 
+input("What do you want to hash?: ")
 nonce = 1
 previous_hash = 0
 block = 1
 chain = []
 create_block = []
+
+
 class Blockchain:
-    input("What do you want to hash?: ")
 
     def create_block(input, nonce, previous_hash):
-        block= (input, nonce, previous_hash)
+        block = (input, nonce, previous_hash)
         chain.append(block)
-        print(block)
+        return block
 
     def get_previous_block(input):
         return input.chain[-1]
@@ -40,10 +42,10 @@ class Blockchain:
         block_index = 1
         while block_index < len(chain):
             block = chain[block_index]
-            if block['previous_hash'] != self.hash(previous_block):
+            if block[previous_hash] != self.hash(previous_block):
                 return False
-            previous_nonce = previous_block['nonce']
-            nonce = block['nonce']
+            previous_nonce = previous_block[nonce]
+            nonce = block[nonce]
             hash_operation = hashlib.sha256(str(nonce ** 2 - previous_nonce ** 2).encode()).hexdigest()
             if hash_operation[:4] != '0000':
                 return False
@@ -69,10 +71,9 @@ def mine_block(request):
         previous_hash = blockchain.hash(previous_block)
         block = blockchain.create_block(nonce, previous_hash)
         response = {'message': 'Congratulations, you just mined a block!',
-                    'index': block['index'],
-                    'timestamp': block['timestamp'],
-                    'nonce': block['nonce'],
-                    'previous_hash': block['previous_hash']}
+                    'input': block[input],
+                    'nonce': block[nonce],
+                    'previous_hash': block[previous_hash]}
     return JsonResponse(response)
 
 
