@@ -14,7 +14,7 @@ class Blockchain:
         self.create_block(input, nonce, previous_hash)
 
     def create_block(self, input, nonce, previous_hash):
-        block = dict(index=len(input.chain) + 1, nonce=nonce, previous_hash=previous_hash)
+        block = {'index': len(input.chain) + 1, 'nonce': nonce, 'previous_hash': previous_hash}
         input.chain.append(block)
         return block
 
