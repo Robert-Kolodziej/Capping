@@ -9,7 +9,7 @@ function getData()
    //localStorage.setItem("txtValue1", Degree name);
    //localStorage.setItem("txtValue2", Dates);
    //localStorage.setItem("txtValue3", Description);
-   var institutionInput = <HTMLInputElement> document.getElementById("institution");
+   var institutionInput = <HTMLInputElement> document.getElementById("institution")</HTMLInputElement>;
    institutionInput.value = institutionInput.value+ InstitutionName;
 
 
