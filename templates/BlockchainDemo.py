@@ -11,8 +11,9 @@ chain = []
 create_block = []
 class Blockchain:
     input("What do you want to hash?: ")
+
     def create_block(input, nonce, previous_hash):
-        block = (input, nonce, previous_hash)
+        block= (input, nonce, previous_hash)
         chain.append(block)
         print(block)
 
