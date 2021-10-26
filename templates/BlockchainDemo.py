@@ -7,15 +7,14 @@ input("What do you want to hash?: ")
 nonce = random.randint
 previous_hash = 0
 block = 1
-
-
+print(nonce)
 class Blockchain:
 
     def __init__(self):
         self.chain = []
         self.create_block(input, nonce, previous_hash)
 
-    def create_block(input,nonce, previous_hash):
+    def create_block(self, input, nonce, previous_hash):
         block = dict(index=len(input.chain) + 1, nonce=nonce, previous_hash=previous_hash)
         input.chain.append(block)
         return block
@@ -56,7 +55,7 @@ class Blockchain:
 
 
 # Creating our Blockchain
-blockchain = Blockchain()
+blockchain = Blockchain();
 
 
 # Mining a new block
