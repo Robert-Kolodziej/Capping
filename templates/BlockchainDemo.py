@@ -1,7 +1,6 @@
 import hashlib
 import json
 import random
-from random import randint
 
 input("What do you want to hash?: ")
 nonce = random.randint
