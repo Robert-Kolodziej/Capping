@@ -12,7 +12,7 @@
 
 
     <link rel="stylesheet" href="http://35.172.191.14/css/app.css?_m=1630996409" media="all">
-    <script src="http://35.172.191.14/js/app.js?_m=1630996409" defer></script>
+    <script src="script.js" defer></script>
 
 
     </head>
@@ -54,18 +54,26 @@
 
                 <div class="bg-white p-2 rounded text-gray-600 text-sm flex flex-wrap justify-between">
             <ul class="my-2 md:w-1/2 w-full">
-                <li><strong>Institution name:</strong> </li>
+
+                <li id="institution"><strong>Institution name:</strong> </li>
                 <li><strong>Degree name:</strong> </li>
                 <li><strong>Dates:</strong> </li>
                 <li><strong>Description:</strong> </li>
+
             </ul>
             <div class="my-2 mx-2">
                 <img class="rounded w-28 h-auto" src="http://35.172.191.14/images/cert.png" alt="certified">
             </div>
             <div class="my-2">
                 <form method="POST" action="educationcreate.html" class="inline">
-                    <input type="hidden" name="_token" value="SlPAvQo10bjzpQr74qN9t493qvdNvRq3cZgqrt66">                    <input type="hidden" name="_method" value="DELETE">                    <button type="submit" class="btn text-red-500 ml-2">Delete</button>
+                    <input type="hidden" name="_token" value="SlPAvQo10bjzpQr74qN9t493qvdNvRq3cZgqrt66">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit" class="btn text-red-500 ml-2">Delete</button>
                 </form>
+
+        <div class="font-semibold mb-4 text-lg"></div>
+                <button type="submit" class="btn btn-primary md:m-auto m1-2"> Hash </button>
+                <div>
             </div>
         </div>
 
@@ -73,6 +81,7 @@
 </div>
             </div>
         </div>
-
+        <script src = "script.js" > </script>
             </body>
+
 </html>
