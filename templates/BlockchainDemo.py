@@ -5,7 +5,7 @@ import random
 import self as self
 
 input("What do you want to hash?: ")
-nonce = 1
+nonce = random.randint
 previous_hash = 0
 block = 1
 chain = []
