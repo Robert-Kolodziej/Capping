@@ -4,6 +4,8 @@ from textwrap import dedent
 from time import time
 from uuid import uuid4
 
+import requests
+
 from flask import Flask, jsonify, request
 
 
@@ -18,6 +20,14 @@ class Blockchain(object):
 
         # create the genesis block
         self.new_block(previous_hash=1, proof=100)
+        self.nodes = set()
+
+    def register_node(self, address):
+        # add new node to the list of nodes
+        #:param address : <str> address of the node (our html site)
+        # return : none
+        parsed_url = urlparse(address)
+        self.nodes.add(parsed_url.netloc)
 
     def new_block(self):
         # code this to add a new block to the chain
@@ -33,7 +43,7 @@ class Blockchain(object):
 
                         }
                     ],
-                    'proof':
+                    'proof':,
                 'previous_hash':
         }
 
@@ -142,7 +152,7 @@ class Blockchain(object):
         }
         return jsonify(response), 200
 
-    @app.route('/verification/new', methods = ['POST'])
+    @app.route('/verification/new', methods=['POST'])
     def new_verification():
         values = request.get_json()
         # check that the required fields are in the POST'ed data
@@ -155,33 +165,127 @@ class Blockchain(object):
                                             values['Description'])
         response = {'message': f'Transaction will be added to Block {index}'}
         return jsonify(response), 201
+
     @app.route('/mine', methods=['GET'])
     def mine():
-        #we run the proof of work algorithm to get the next proof
+
+    # we run the proof of work algorithm to get the next proof
     last_block = blockchain.last_block
     last_proof = last_block['proof']
     proof = blockchain.proof_of_work(last_proof)
 
-    #we must recieve a reward for finding the proof
-    #the institution is "0" to signify that this node has mined a new block
+    # we must recieve a reward for finding the proof
+    # the institution is "0" to signify that this node has mined a new block
     blockchain.new_verification(
-        institution = "0",
-        degree = node_identifier,
-        dates = 1,
+        institution="0",
+        degree=node_identifier,
+        dates=1,
     )
 
-    #forge the new Block by adding it to the chain
-    previous_hash = blockchain.hash (last_block)
-    block = blockchain.new_block(proof,previous_hash)
+    # forge the new Block by adding it to the chain
+    previous_hash = blockchain.hash(last_block)
+    block = blockchain.new_block(proof, previous_hash)
 
     response = {
         'message': "New Block Forged",
-        'index' : block['index'],
-        'verification' : block['verification'],
-        'proof' : block['proof'],
-        'previous_hash' : block['previous_hash'],
+        'index': block['index'],
+        'verification': block['verification'],
+        'proof': block['proof'],
+        'previous_hash': block['previous_hash'],
     }
     return jsonify(response), 200
 
-    if __name__ == '__main__':
-        app.run(host='0.0.0.0', port=5000)
+    def valid_chain(self, chain):
+        # determine if a given blockchain is valid
+        last_block = chain[0]
+        current_index = 1
+
+        while current_index < len(chain):
+            block = chain[current_index]
+            print(f'{last_block}')
+            print(f'{block}')
+            print("\n------------\n")
+            # check that the hash of the block is correct
+            if block['previous_hash'] != self.hash(last_block):
+                return False
+            # check that the Proof of Work is correct
+            if not self.valid_proof(last_block['proof'], block['proof']):
+                retun
+                False
+
+            last_block = block
+            current_index += 1
+
+        return True
+
+        def reslove_conflicts(self):
+
+    # our consensus algorithm for resolving conflicts
+
+    neighbours = self.nodes
+    new_chain = None
+
+    # looking for chains longer than ours
+    max_length = len(self.chain)
+
+    # grab and verify the chains from all nodes in our network
+    for nodes in neighbours:
+        response = requests.get(f'http://{node}/chain')
+
+    if response.status_code == 200:
+        length = response.json()['length']
+        chain
+        response.json()['chain']
+
+        # check if the chain is valid
+        if length > max_length and self.valid_chain(chain):
+            max_length = length
+            max_chain = chain
+
+    # replace our chain if we discovered anew, valid chain longer than ours
+    if new_chain:
+        self.chain = new_chain
+        return True
+
+    return False
+
+
+def register_nodes():
+    values = request.get_json()
+
+
+nodes = values.get('nodes')
+if nodes is None:
+    return "Error: Please supply a valid list of nodes", 400
+
+for node in nodes:
+    blockchain.register_node(node)
+
+response = {
+    'message': 'New nodes have been added',
+    'total_nodes': list(blockchain.nodes),
+}
+
+return jsonify(response), 201
+
+
+def consensus():
+    replaced = blockchain.resolve_conflicts()
+
+    if replaced:
+        response = {
+            'message': 'Our chain was replaced',
+            'new_chain': blockchain.chain
+        }
+    else:
+        response = {
+            'message': 'Our chain is authoritative',
+            'chain': blockchain.chain
+
+        }
+
+    return jsonify(reponse), 200
+
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
