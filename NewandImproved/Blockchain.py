@@ -126,10 +126,10 @@ class Blockchain(object):
         return hashlib.sha256(block_string).hexdigest()
 
     # Instantiate our Node
-    app = Flask(__name__)
+app = Flask(__name__)
 
     # generate a globally unique address for this node
-    node_identifier = str(uuid4()).replace('-', ' ')
+node_identifier = str(uuid4()).replace('-', ' ')
 
     # Instantiate the Blockchain
 
@@ -147,7 +147,7 @@ def new_verification():
     return "We'll add a new verification"
 
 
-@app.route('/chain', methods['GET'])
+@app.route('/chain', methods=['GET'])
 def full_chain():
     response = {
         'chain': blockchain.chain,
