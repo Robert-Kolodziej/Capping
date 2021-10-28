@@ -43,8 +43,8 @@ class Blockchain(object):
 
                         }
                     ],
-                    'proof':,
-                'previous_hash':
+                    'proof': #need to figure out proof,
+                'previous_hash': #need to figure out hash
         }
 
         def new_block(self, proof, previous_hash=None):
@@ -119,7 +119,7 @@ class Blockchain(object):
 
     def hash(block):
         # code this to hash a block
-        # chreates a SHA-256 hash of a block
+        # creates a SHA-256 hash of a block
         #:param block: <dict> Block
         #:return: <str>
         # we must make sure the dictionary is ordered or we will have inconsistent hashes
@@ -144,7 +144,7 @@ class Blockchain(object):
     def new_verification():
         return "We'll add a new verification"
 
-    @approute('/chain', methods['GET'])
+    @app.route('/chain', methods['GET'])
     def full_chain():
         response = {
             'chain': blockchain.chain,
