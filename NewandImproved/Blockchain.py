@@ -7,7 +7,7 @@ from uuid import uuid4
 
 import requests
 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, app
 
 
 # create a blockchain class
@@ -20,7 +20,7 @@ class Blockchain(object):
         self.current_verifications = []
 
         # create the genesis block
-        self.new_block(self, previous_hash=1, proof=100)
+        self.new_block()
         self.nodes = set()
 
     def register_node(self, address):
