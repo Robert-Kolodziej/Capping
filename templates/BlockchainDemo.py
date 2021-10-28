@@ -1,9 +1,33 @@
 import hashlib
 import json
+<<<<<<< Updated upstream
+=======
+import random
 
+import self as self
 
+class Block:
+    def __init__(self, input, previous_hash):
+        nonce = random.randint
+        self.hash(input)
+    def hash(self, input, block):
+        encoded_block = json.dumps(block, sort_keys=True).encode()
+        return hashlib.sha256(encoded_block).hexdigest()
 class Blockchain:
+>>>>>>> Stashed changes
 
+    def __init__(self):
+        self.chain = []
+        self.create_block()
+
+    def create_block(self, nonce, previous_hash):
+        input = str(input("What do you want to hash?: "))
+        block = Block (input, previous_hash)
+        self.chain.append(block)
+        print(block)
+
+
+<<<<<<< Updated upstream
     def __init__(self):
         self.chain = []
         self.create_block(nonce=1, previous_hash='0')
@@ -12,6 +36,8 @@ class Blockchain:
         block = dict(index=len(self.chain) + 1, nonce=nonce, previous_hash=previous_hash)
         self.chain.append(block)
         return block
+=======
+>>>>>>> Stashed changes
 
     def get_previous_block(self):
         return self.chain[-1]
@@ -27,9 +53,13 @@ class Blockchain:
                 new_nonce += 1
         return new_nonce
 
+<<<<<<< Updated upstream
     def hash(self, block):
         encoded_block = json.dumps(block, sort_keys=True).encode()
         return hashlib.sha256(encoded_block).hexdigest()
+=======
+
+>>>>>>> Stashed changes
 
     def is_chain_valid(self, chain):
         previous_block = chain[0]
@@ -89,3 +119,6 @@ def is_valid(request):
         else:
             response = {'message': 'Houston, we have a problem. The Blockchain is not valid.'}
     return JsonResponse(response)
+
+if __name__ == '__main__':
+    x = Blockchain()
