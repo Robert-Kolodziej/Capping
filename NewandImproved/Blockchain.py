@@ -1,5 +1,6 @@
 import hashlib
 import json
+from crypt import methods
 from textwrap import dedent
 from time import time
 from uuid import uuid4
@@ -168,32 +169,31 @@ class Blockchain(object):
 
     @app.route('/mine', methods=['GET'])
     def mine():
+        # we run the proof of work algorithm to get the next proof
+        last_block = blockchain.last_block
+        last_proof = last_block['proof']
+        proof = blockchain.proof_of_work(last_proof)
 
-    # we run the proof of work algorithm to get the next proof
-    last_block = blockchain.last_block
-    last_proof = last_block['proof']
-    proof = blockchain.proof_of_work(last_proof)
+        # we must recieve a reward for finding the proof
+        # the institution is "0" to signify that this node has mined a new block
+        blockchain.new_verification(
+            institution="0",
+            degree=node_identifier,
+            dates=1,
+        )
 
-    # we must recieve a reward for finding the proof
-    # the institution is "0" to signify that this node has mined a new block
-    blockchain.new_verification(
-        institution="0",
-        degree=node_identifier,
-        dates=1,
-    )
+        # forge the new Block by adding it to the chain
+        previous_hash = blockchain.hash(last_block)
+        block = blockchain.new_block(proof, previous_hash)
 
-    # forge the new Block by adding it to the chain
-    previous_hash = blockchain.hash(last_block)
-    block = blockchain.new_block(proof, previous_hash)
-
-    response = {
-        'message': "New Block Forged",
-        'index': block['index'],
-        'verification': block['verification'],
-        'proof': block['proof'],
-        'previous_hash': block['previous_hash'],
+        response = {
+            'message': "New Block Forged",
+            'index': block['index'],
+            'verification': block['verification'],
+            'proof': block['proof'],
+            'previous_hash': block['previous_hash'],
     }
-    return jsonify(response), 200
+        return jsonify(response), 200
 
     def valid_chain(self, chain):
         # determine if a given blockchain is valid
@@ -218,34 +218,34 @@ class Blockchain(object):
 
         return True
 
-        def reslove_conflicts(self):
+    def reslove_conflicts(self):
 
-    # our consensus algorithm for resolving conflicts
+        # our consensus algorithm for resolving conflicts
 
-    neighbours = self.nodes
-    new_chain = None
+        neighbours = self.nodes
+        new_chain = None
 
-    # looking for chains longer than ours
-    max_length = len(self.chain)
+        # looking for chains longer than ours
+        max_length = len(self.chain)
 
-    # grab and verify the chains from all nodes in our network
-    for nodes in neighbours:
-        response = requests.get(f'http://{node}/chain')
+        # grab and verify the chains from all nodes in our network
+        for nodes in neighbours:
+            response = requests.get(f'http://{node}/chain')
 
-    if response.status_code == 200:
-        length = response.json()['length']
-        chain
-        response.json()['chain']
+        if response.status_code == 200:
+            length = response.json()['length']
+            chain
+            response.json()['chain']
 
         # check if the chain is valid
         if length > max_length and self.valid_chain(chain):
             max_length = length
             max_chain = chain
 
-    # replace our chain if we discovered anew, valid chain longer than ours
-    if new_chain:
-        self.chain = new_chain
-        return True
+        # replace our chain if we discovered anew, valid chain longer than ours
+        if new_chain:
+            self.chain = new_chain
+            return True
 
     return False
 
