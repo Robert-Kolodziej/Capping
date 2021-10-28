@@ -210,7 +210,7 @@ class Blockchain(object):
                 return False
             # check that the Proof of Work is correct
             if not self.valid_proof(last_block['proof'], block['proof']):
-                retun
+                return
                 False
 
             last_block = block
