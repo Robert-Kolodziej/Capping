@@ -30,36 +30,32 @@ class Blockchain(object):
         parsed_url = urlparse(address)
         self.nodes.add(parsed_url.netloc)
 
-    def new_block(self):
-        # code this to add a new block to the chain
-        block = dict(index=1, timestamp=time(), verification=[
-            {
-                'Institution',
-                'Degree',
-                'Dates',
-                'Description'
 
-            }
-        ],
-                     proof=[],
-                     previous_hash=[]
-                     )
+    def new_block(self, proof="gensis block previous hash", previous_hash=None):
+        # create a new block in the blockchain
 
-        def new_block(self, proof, previous_hash=None):
-            # create a new block in the blockchain
+        # :param proof: <int> the proof given by the Proof of Work algorithm
+        # :param previous_hash: (optional) <str> Hash of previous Block
 
-            # :param proof: <int> the proof given by the Proof of Work algorithm
-            # :param previous_hash: (optional) <str> Hash of previous Block
-
+        if not proof:
             block = {
                 'index': len(self.chain) + 1,
                 'timestamp': time(),
-                'verification': self.current_verrification,
+                'verification': self.current_verifications,
                 'proof': proof,
-                'previous_hash': previous_hash or self.hash(self.chain[+1]),
+                'previous_hash': self.hash(self.chain[-1]),
+            }
+        else:
+            block = {
+                'index': len(self.chain) + 1,
+                'timestamp': time(),
+                'verification': self.current_verifications,
+                'proof': proof,
+                'previous_hash': previous_hash,
             }
 
-            # reset the current list of verifications
+
+        # reset the current list of verifications
 
         self.current_verifications = []
 
@@ -71,7 +67,7 @@ class Blockchain(object):
         # code this to create a new verification to go into the next mined block
 
         # sets parameter values for block
-        self.current_verification.append({
+        self.current_verifications.append({
             # :param Institution: <str> Name of Institution
             'Institution': Institution,
             # :param Degree: <str> Name of Degree
@@ -112,10 +108,10 @@ class Blockchain(object):
         #:return <bool> True if Correct, False if not
 
         guess = f'{last_proof}{proof}'.encode()
-        guess_hash = hashlib.sha356(guess).hexdigest()
+        guess_hash = hashlib.sha256(guess).hexdigest()
         return guess_hash[:4] == "0000"
 
-    def hash(block):
+    def hash(self, block):
         # code this to hash a block
         # creates a SHA-256 hash of a block
         #:param block: <dict> Block
@@ -127,6 +123,7 @@ class Blockchain(object):
 
     # Instantiate our Node
 app = Flask(__name__)
+app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 
     # generate a globally unique address for this node
 node_identifier = str(uuid4()).replace('-', ' ')
@@ -136,15 +133,9 @@ node_identifier = str(uuid4()).replace('-', ' ')
 
 blockchain = Blockchain()
 
-
-@app.route('/mine', methods=['GET'])
-def mine():
-    return "We'll mine a new Block"
-
-
-@app.route('/verification/new', methods=['POST'])
-def new_verification():
-    return "We'll add a new verification"
+@app.route('/', methods=['GET'])
+def index():
+    return "<h1> Hello World </h1>"
 
 
 @app.route('/chain', methods=['GET'])
@@ -156,7 +147,7 @@ def full_chain():
     return jsonify(response), 200
 
 
-@app.route('/verification/new', methods=['POST'])
+@app.route('/new_verification', methods=['POST'])
 def new_verification():
     values = request.get_json()
     # check that the required fields are in the POST'ed data
@@ -165,7 +156,7 @@ def new_verification():
         return 'Missing values', 400
 
         # create a new verification
-    index = blockchain.new_verification(values['Institution'], values['Degree'], value['Dates'],
+    index = blockchain.new_verification(values['Institution'], values['Degree'], values['Dates'],
                                         values['Description'])
     response = {'message': f'Transaction will be added to Block {index}'}
     return jsonify(response), 201
@@ -181,14 +172,15 @@ def mine():
     # we must recieve a reward for finding the proof
     # the institution is "0" to signify that this node has mined a new block
     blockchain.new_verification(
-        institution="0",
-        degree=node_identifier,
-        dates=1,
+        Institution="0",
+        Degree=node_identifier,
+        Dates=1,
+        Description=""
     )
 
     # forge the new Block by adding it to the chain
     previous_hash = blockchain.hash(last_block)
-    block = blockchain.new_block(proof, previous_hash)
+    block = blockchain.new_block(str(proof), previous_hash)
 
     response = {
         'message': "New Block Forged",
@@ -232,18 +224,17 @@ def reslove_conflicts(self):
     max_length = len(self.chain)
 
     # grab and verify the chains from all nodes in our network
-    for nodes in neighbours:
+    for node in neighbours:
         response = requests.get(f'http://{node}/chain')
 
-    if response.status_code == 200:
-        length = response.json()['length']
-        chain
-        response.json()['chain']
+        if response.status_code == 200:
+            length = response.json()['length']
+            chain = response.json()['chain']
 
         # check if the chain is valid
-    if length > max_length and self.valid_chain(chain):
-        max_length = length
-        max_chain = chain
+            if length > max_length and self.valid_chain(chain):
+                max_length = length
+                new_chain = chain
 
         # replace our chain if we discovered anew, valid chain longer than ours
     if new_chain:
@@ -252,7 +243,7 @@ def reslove_conflicts(self):
 
     return False
 
-
+@app.route('/nodes/register', methods=['POST'])
 def register_nodes():
     values = request.get_json()
 
@@ -270,7 +261,7 @@ def register_nodes():
 
     return jsonify(response), 201
 
-
+@app.route('/nodes/resolvre', methods=['GET'])
 def consensus():
     replaced = blockchain.resolve_conflicts()
 
@@ -286,7 +277,7 @@ def consensus():
 
         }
 
-    return jsonify(reponse), 200
+    return jsonify(response), 200
 
 
 if __name__ == '__main__':
@@ -297,4 +288,4 @@ if __name__ == '__main__':
     args = parser.parse_args()
     port = args.port
 
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=port)
