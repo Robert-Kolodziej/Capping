@@ -12,7 +12,7 @@
 
 
     <link rel="stylesheet" href="http://35.172.191.14/css/app.css?_m=1630996409" media="all">
-    <script src="http://35.172.191.14/js/app.js?_m=1630996409" defer></script>
+<!-- <script src="http://35.172.191.14/js/app.js?_m=1630996409" defer></script> -->
 
 
     </head>
@@ -168,7 +168,7 @@
             <span class="text-gray-700">Institution name *</span>
             <input
               type="text"
-              name="institution_name"
+              id="institution_name"
               value=""
               class=" mt-1 block w-full rounded-md bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0"
               placeholder="Institution name"
@@ -181,7 +181,7 @@
           <span class="text-gray-700">Degree name *</span>
           <input
             type="text"
-            name="degree_name"
+            id="degree_name"
             value=""
             class=" mt-1 block w-full rounded-md bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0"
             placeholder="Degree name"
@@ -194,7 +194,7 @@
           <span class="text-gray-700">Dates</span>
           <input
             type="text"
-            name="dates"
+            id="dates"
             value=""
             class=" mt-1 block w-full rounded-md bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0"
             placeholder="Date range"
@@ -204,16 +204,45 @@
         <label class="block">
             <span class="text-gray-700">Description</span>
             <textarea
-                name="description"
+                id="description"
                 class="mt-1 block w-full rounded-md bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0"
                 rows="3"></textarea>
                     </label>
 
-        <button type="submit" class="btn btn-primary md:m-auto md:w-1/2"> Add </button>
+        <button type="submit" class="btn btn-primary md:m-auto md:w-1/2" onclick="getData()"> Add </button>
     </div>
 </form>
 </div>
             </div>
         </div>
-    <script src = "script.js" > </script>
+        </body>
+<script>
+    function getData()
+    {
+        var InstitutionName = document.getElementById("institution_name").value;
+        var DegreeName= document.getElementById("degree_name").value;
+        var Dates = document.getElementById("dates").value;
+        var Description= document.getElementById("description").value;
+
+        var json_data = {
+            "Insitution": InstitutionName,
+            "Degree": DegreeName,
+            "Dates" : Dates,
+            "Description" : Description
+        }
+
+        var xhr = new XMLHttpRequest();
+        var url = "http://148.100.145.111:5000/new_verification";
+        xhr.open("POST", url, true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        var data = JSON.stringify(json_data);
+        xhr.send(data);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                var json = JSON.parse(xhr.responseText);
+                console.log(json);
+            }
+        };
+    }
+</script>
 </html>

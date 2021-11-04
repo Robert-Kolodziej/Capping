@@ -158,7 +158,7 @@ def new_verification():
         # create a new verification
     index = blockchain.new_verification(values['Institution'], values['Degree'], values['Dates'],
                                         values['Description'])
-    response = {'message': f'Transaction will be added to Block {index}'}
+    response = {'message': f'Transaction will be added to Block {index}, {values}'}
     return jsonify(response), 201
 
 
