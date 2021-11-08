@@ -26,7 +26,7 @@
 <div class="font-semibold text-2xl text-gray-700">Add new education for Robert Kolodziej</div>
 
 <div class="rounded-xl shadow-md p-4 my-4">
-<form method="POST" action="success.html" autocomplete="off" enctype="multipart/form-data">
+<form method="POST" action="success.html" autocomplete="off">
     <input type="hidden" value="1" name="contact_id" />
     <input type="hidden" name="_token" value="EN49vByQn7QXwmeiF76Z0Sv1CvUwfFYQrmrJROyV">        <div class="grid grid-cols-1 gap-6">
 
@@ -217,7 +217,7 @@
         </div>
         </body>
 <script>
-    function getData()
+    function getData() async
     {
         var InstitutionName = document.getElementById("institution_name").value;
         var DegreeName= document.getElementById("degree_name").value;
@@ -225,23 +225,29 @@
         var Description= document.getElementById("description").value;
 
         var json_data = {
-            "Insitution": InstitutionName,
-            "Degree": DegreeName,
-            "Dates" : Dates,
-            "Description" : Description
+           "userId" : "2",
+           "certificate_token" : " ",
+           "certificate_url" : " ",
+           "certificate_category" : " ",
+           "institution_name" : InstitutionName,
+           "degree_name" : DegreeName,
+           "date_range" : " ",
+           "description" : Description
         }
 
         var xhr = new XMLHttpRequest();
-        var url = "http://148.100.145.111:5000/new_verification";
+        var url = "https://safe-demo-api.herokuapp.com/create";
         xhr.open("POST", url, true);
         xhr.setRequestHeader("Content-Type", "application/json");
         var data = JSON.stringify(json_data);
-        xhr.send(data);
+        await xhr.send(data);
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4 && xhr.status === 200) {
                 var json = JSON.parse(xhr.responseText);
                 console.log(json);
             }
+
+            return true;
         };
     }
 </script>
